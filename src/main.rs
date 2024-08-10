@@ -27,7 +27,7 @@ fn draw_cell(framebuffer: &mut Framebuffer, xo: usize, yo:usize, block_size: usi
     }
 }
 
-fn render(framebuffer: &mut Framebuffer, player: &Player){
+fn render2d(framebuffer: &mut Framebuffer, player: &Player){
   let maze = load_maze("./maze.txt");
   let block_size = 50;
 
@@ -45,7 +45,13 @@ fn render(framebuffer: &mut Framebuffer, player: &Player){
 
   //caster
   cast_ray(framebuffer, &maze, player, player.a, block_size);
-
+  //FOV
+  let num_rays = 5;
+  for i in 0..num_rays {
+      let current_ray = i as f32 / num_rays as f32;
+      let a = player.a - (player.fov / 2.0) + (player.fov * current_ray);
+      cast_ray(framebuffer, &maze, player, a, block_size);
+  }
 }
 
 fn main() {
@@ -62,17 +68,33 @@ fn main() {
     framebuffer.set_background_color(0x334157);
     let close_delay = Duration::from_millis(16);
 
-    let player = Player {
+    let player1 = Player {
       pos: Vec2::new(75.0, 75.0),
       a: PI/3.0,
+      fov: PI/3.0
     };
 
-    while window.is_open() && !window.is_key_down(Key::Escape) {
+    let mut mode = "2D";
+
+    while window.is_open(){
       framebuffer.clear();
 
-      render(&mut framebuffer,&player);
+      if window.is_key_down(Key::Escape) {
+        break;
+      }
+      if window.is_key_down(Key::M){
+        mode = if mode == "2D" {"3D"} else {"2D"};
+      }
 
-      window.update_with_buffer(&framebuffer.buffer, framebuffer_width, framebuffer_height).unwrap();
+      if mode == "2D" {
+        render2d(&mut framebuffer,&player1);
+      } else {
+        render2d(&mut framebuffer,&player1);
+      }
+
+      window
+        .update_with_buffer(&framebuffer.buffer, framebuffer_width, framebuffer_height)
+        .unwrap();
 
       std::thread::sleep(close_delay);
     }
