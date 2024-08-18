@@ -84,10 +84,10 @@ pub fn render3d(
             '<' => "<_3".to_string(),
             '>' => ">_4".to_string(),
             '*' => "*_5".to_string(),
-            '(' => "(_6".to_string(),
-            ')' => "(_6".to_string(),
-            '[' => "(_6".to_string(),
-            ']' => "(_6".to_string(),
+            '(' => "(_7".to_string(),
+            ')' => "(_7".to_string(),
+            '[' => "[_8".to_string(),
+            ']' => "[_8".to_string(),
             _ => continue,
         };
 
