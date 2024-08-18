@@ -66,24 +66,20 @@ fn main() {
             let block_x = (i * block_size) as f32;
             let block_y = (j * block_size) as f32;
             if cell == '('{
-                open_parx = block_x;
-                open_pary = block_y;
-                println!("Bloque (");
+                open_parx = block_x + 50.0;
+                open_pary = block_y + 25.0;
             }
             if cell == ')'{
-                close_parx = block_x;
-                close_pary = block_y;
-                println!("Bloque )");
+                close_parx = block_x - 50.0;
+                close_pary = block_y + 25.0;
             }
             if cell == '['{
-                open_corx = block_x;
-                open_cory = block_y;
-                println!("Bloque [");
+                open_corx = block_x + 50.0;
+                open_cory = block_y  + 25.0;
             }
             if cell == ']'{
-                close_corx = block_x;
-                close_cory = block_y;
-                println!("Bloque ]");
+                close_corx = block_x - 50.0;
+                close_cory = block_y + 25.0;
             }
         }
     }
@@ -97,44 +93,44 @@ fn main() {
                     block_x,
                     block_y,
                     move |player| {
-                        teleport_player(player, close_parx as f32 - 50.0, close_pary as f32)
+                        teleport_player(player, String::from("("), open_parx as f32 , open_pary as f32)
                     },
                 ));
                 println!("Bloque (");
-                println!("X:{block_x} Y: {block_y} NewX: {close_parx} NewY:{close_pary}");
+                println!("X:{block_x} Y: {block_y} NewX: {open_parx} NewY: {open_pary}");
             }
             if cell == ')'{
                 interactible_blocks.push(InteractibleBlock::new(
                     block_x,
                     block_y,
                     move |player| {
-                        teleport_player(player, open_parx as f32 - 50.0, open_pary as f32)
+                        teleport_player(player, String::from(")"), close_parx as f32 , close_pary as f32)
                     },
                 ));
                 println!("Bloque )");
-                println!("X:{block_x} Y: {block_y} NewX: {open_parx} NewY: {open_pary}");
+                println!("X:{block_x} Y: {block_y} NewX: {close_parx} NewY:{close_pary}");
             }
             if cell == '['{
                 interactible_blocks.push(InteractibleBlock::new(
                     block_x,
                     block_y,
                     move |player| {
-                        teleport_player(player, close_corx as f32 - 50.0, close_cory as f32)
+                        teleport_player(player, String::from("["), open_corx as f32 , open_cory as f32)
                     },
                 ));
                 println!("Bloque [");
-                println!("X:{block_x} Y: {block_y} NewX: {close_corx} NewY: {close_cory}");
+                println!("X:{block_x} Y: {block_y} NewX: {open_corx} NewX: {open_cory}");
                 }
             if cell == ']'{
                 interactible_blocks.push(InteractibleBlock::new(
                     block_x,
                     block_y,
                     move |player| {
-                        teleport_player(player, open_corx as f32 - 50.0, open_cory as f32);
+                        teleport_player(player, String::from("]"),close_corx as f32 , close_cory as f32);
                     },
                 ));
                 println!("Bloque ]");
-                println!("X:{block_x} Y: {block_y} NewX: {open_corx} NewX: {open_cory}");
+                println!("X:{block_x} Y: {block_y} NewX: {close_corx} NewY: {close_cory}");
             }
         }
     }
