@@ -14,6 +14,10 @@ pub fn draw_cell(
         '<' => 0x00ff00,
         '>' => 0x00ff00,
         '(' => 0xffffff,
+        ')' => 0xffffff,
+        '[' => 0xffffff,
+        ']' => 0xffffff,
+
         _ => 0x000000,
     };
     framebuffer.set_current_color(color);

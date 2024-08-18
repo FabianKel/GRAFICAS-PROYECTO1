@@ -53,6 +53,9 @@ impl TextureManager {
                     2 => "-_2".to_string(),
                     3 => "<_3".to_string(),
                     4 => ">_4".to_string(),
+                    5 => "*_5".to_string(),
+                    6 => "(_6".to_string(),
+                    7 => "[_7".to_string(),
                     _ => continue,
                 };
 
