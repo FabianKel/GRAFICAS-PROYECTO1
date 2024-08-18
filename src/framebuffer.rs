@@ -30,6 +30,18 @@ impl Framebuffer {
         }
     }
 
+    pub fn player(&mut self, x: usize, y: usize, size: usize) {
+        for dx in 0..size {
+            for dy in 0..size {
+                let px = x + dx;
+                let py = y + dy;
+                if px < self.width && py < self.height {
+                    self.point(px, py);
+                }
+            }
+        }
+    }
+
     pub fn set_background_color(&mut self, color: u32) {
         self.background_color = color;
     }

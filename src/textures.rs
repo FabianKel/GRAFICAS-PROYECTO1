@@ -51,7 +51,8 @@ impl TextureManager {
                     0 => "|_0".to_string(),
                     1 => "+_1".to_string(),
                     2 => "-_2".to_string(),
-                    3 => "._3".to_string(),
+                    3 => "<_3".to_string(),
+                    4 => ">_4".to_string(),
                     _ => continue,
                 };
 
