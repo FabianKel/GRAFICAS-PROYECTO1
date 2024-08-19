@@ -1,12 +1,9 @@
-
 use minifb::Key;
 use minifb::Window;
 use std::collections::HashMap;
-use std::f32::consts::PI;
 
 use crate::framebuffer::Framebuffer;
 use crate::caster::cast_ray;
-
 use crate::player::Player;
 
 pub fn process_events(
@@ -27,9 +24,11 @@ pub fn process_events(
     // Realizar un cast de rayos para detectar intersección con un bloque
     let intersect = cast_ray(framebuffer, maze, player, angle, block_size, false);
 
+    // Limpiar el framebuffer antes de renderizar
+    framebuffer.clear();
+
     // Verificar si el jugador está mirando un bloque especial y si está a una distancia cercana
     if intersect.distance < 50.0 && (intersect.impact == '(' || intersect.impact == ')' || intersect.impact == '[' || intersect.impact == ']') {
-        println!("Press E");
 
         // Si se presiona 'E', realizar el teletransporte
         if window.is_key_down(Key::E) {
@@ -74,6 +73,7 @@ pub fn process_events(
             }
         }
     }
+
     // Calcula la nueva posición propuesta hacia adelante
     if window.is_key_down(Key::W) || window.is_key_down(Key::Up) {
         let new_x = player.pos.x + player.a.cos() * move_speed;
@@ -118,4 +118,20 @@ pub fn process_events(
     if window.is_key_down(Key::D) || window.is_key_down(Key::Right) {
         player.a += rotate_speed;
     }
+}
+
+pub fn overlay(
+    player: &mut Player,
+    maze: &Vec<Vec<char>>,
+    block_size: usize,
+    framebuffer: &mut Framebuffer,
+){
+    let angle = player.a;
+    let intersect = cast_ray(framebuffer, maze, player, angle, block_size, false);
+
+    // Limpiar el framebuffer antes de renderizar
+
+    if intersect.distance < 50.0 && (intersect.impact == '(' || intersect.impact == ')' || intersect.impact == '[' || intersect.impact == ']') {
+        framebuffer.draw_text("PRESS E TO TELEPORT", 450, 200, 6);
+    } 
 }

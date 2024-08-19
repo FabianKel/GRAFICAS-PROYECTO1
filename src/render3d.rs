@@ -39,6 +39,18 @@ pub fn render2d_mini(
     framebuffer.player(player_x - player_size / 2, player_y - player_size / 2, player_size);
 }
 
+pub fn render_sky_and_floor(framebuffer: &mut Framebuffer, hh: f32) {
+    framebuffer.set_current_color(0x141f20);
+    for y in 0..hh as usize {
+        framebuffer.draw_horizontal_line(0, framebuffer.width, y);
+    }
+
+    framebuffer.set_current_color(0x3e515a);
+    for y in hh as usize..framebuffer.height {
+        framebuffer.draw_horizontal_line(0, framebuffer.width, y);
+    }
+}
+
 pub fn render3d(
     framebuffer: &mut Framebuffer,
     player: &Player,
@@ -49,24 +61,14 @@ pub fn render3d(
     let num_rays = framebuffer.width;
     let hh = framebuffer.height as f32 / 2.0;
 
-    framebuffer.set_current_color(0x141f20);
-    for y in 0..hh as usize {
-        for x in 0..framebuffer.width {
-            framebuffer.point(x, y);
-        }
-    }
+    render_sky_and_floor(framebuffer, hh);
 
-    framebuffer.set_current_color(0x3e515a);
-    for y in hh as usize..framebuffer.height {
-        for x in 0..framebuffer.width {
-            framebuffer.point(x, y);
-        }
-    }
-
-    for i in 0..num_rays {
+    let step = 2;
+    for i in (0..num_rays).step_by(step) {
         let current_ray = i as f32 / num_rays as f32;
         let a = player.a - (player.fov / 2.0) + (player.fov * current_ray);
         let intersect = cast_ray(framebuffer, maze, player, a, block_size, false);
+        
         let distance = if intersect.distance > 10.0 {
             intersect.distance
         } else {
@@ -78,20 +80,20 @@ pub fn render3d(
         let y1 = (hh + (wall_height / 2.0)) as usize;
 
         let texture_identifier = match intersect.impact {
-            '|' => "|_0".to_string(),
-            '+' => "+_1".to_string(),
-            '-' => "-_2".to_string(),
-            '<' => "<_3".to_string(),
-            '>' => ">_4".to_string(),
-            '*' => "*_5".to_string(),
-            '(' => "(_7".to_string(),
-            ')' => "(_7".to_string(),
-            '[' => "[_8".to_string(),
-            ']' => "[_8".to_string(),
+            '|' => "|_0",
+            '+' => "+_1",
+            '-' => "-_2",
+            '<' => "<_3",
+            '>' => ">_4",
+            '*' => "*_5",
+            '(' => "(_7",
+            ')' => "(_7",
+            '[' => "[_8",
+            ']' => "[_8",
             _ => continue,
         };
 
-        if let Some(texture) = texture_manager.get_texture(&texture_identifier) {
+        if let Some(texture) = texture_manager.get_texture(texture_identifier) {
             let texture_width = texture.width() as f32;
             let texture_height = texture.height() as f32;
 

@@ -8,10 +8,11 @@ mod render3d;
 mod draw;
 mod events;
 
+use events::overlay;
 use minifb::{Key, Window, WindowOptions};
 use nalgebra_glm::Vec2;
 use std::f32::consts::PI;
-use std::time::Duration;
+use std::time::{Instant, Duration};
 
 use crate::render2d::render2d;
 use crate::render3d::render3d;
@@ -55,8 +56,15 @@ fn main() {
         previous_mouse_x = initial_mouse_x;
     }
 
+    let mut last_time = Instant::now();
+
     while window.is_open() {
         framebuffer.clear();
+
+        let current_time = Instant::now();
+        let elapsed = current_time.duration_since(last_time).as_secs_f32();
+        last_time = current_time;
+        let  fps = (1.0 / elapsed) as u32;
 
         if window.is_key_down(Key::Escape) {
             break;
@@ -68,13 +76,20 @@ fn main() {
         // Procesa eventos de movimiento y acciones
         process_events(&mut player1, &mut window, &maze, block_size, &mut previous_mouse_x, &special_positions, &mut framebuffer);
 
-
-
         if mode == "2D" {
             render2d(&mut framebuffer, &player1);
         } else {
             render3d(&mut framebuffer, &player1, &texture_manager, &maze, block_size);
         }
+
+        overlay(&mut player1, &maze, block_size, &mut framebuffer);
+
+        framebuffer.set_current_color(0xFFFFFF);
+        framebuffer.draw_text("FPS", 50, 10, 3);
+        framebuffer.display_fps(fps, 10, 10, 3);
+        framebuffer.draw_text("PRESS P TO CHANGE MUSIC", 10, 810, 3);
+
+
 
         window
             .update_with_buffer(&framebuffer.buffer, framebuffer_width, framebuffer_height)
