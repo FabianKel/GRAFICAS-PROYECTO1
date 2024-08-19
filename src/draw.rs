@@ -13,10 +13,10 @@ pub fn draw_cell(
         '-' => 0x6076b1,
         '<' => 0x00ff00,
         '>' => 0x00ff00,
-        '(' => 0xffffff,
-        ')' => 0xffffff,
-        '[' => 0xffffff,
-        ']' => 0xffffff,
+        '(' => 0x0000ff,
+        ')' => 0x0000ff,
+        '[' => 0xffff00,
+        ']' => 0xffff00,
 
         _ => 0x000000,
     };
